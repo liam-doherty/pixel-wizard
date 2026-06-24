@@ -1,0 +1,14 @@
+node_modules
+dist
+build
+.git
+pnpm-lock.yaml
+*.lock
+coverage
+/.vite
+/.turbo
+*.log
+.idea
+.vscode
+public
+coverage
