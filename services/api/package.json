@@ -10,7 +10,8 @@
     "dependencies": {
         "@hono/node-server": "catalog:",
         "hono": "catalog:",
-        "common": "workspace:*"
+        "common": "workspace:*",
+        "@hono/zod-validator": "catalog:"
     },
     "devDependencies": {
         "@types/node": "catalog:",

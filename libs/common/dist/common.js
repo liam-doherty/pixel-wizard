@@ -2699,10 +2699,7 @@ function ea(e, t) {
 	return /* @__PURE__ */ cr(e, t);
 }
 //#endregion
-//#region src/player.js
-Ei({ color: ti() });
+//#region src/player.ts
+var ta = Ei({ color: ti() }), na = (e) => e == null, ra = (e) => e && typeof e == "object", ia = (e) => na(e) || Array.isArray(e) && e.length === 0 || ra(e) && Object.keys(e).length === 0 || typeof e == "string" && e.trim().length === 0, aa = (e) => `Hello ${e || "World"} from common lib`;
 //#endregion
-//#region src/main.ts
-var ta = (e) => e == null, na = (e) => e && typeof e == "object", ra = (e) => ta(e) || Array.isArray(e) && e.length === 0 || na(e) && Object.keys(e).length === 0 || typeof e == "string" && e.trim().length === 0, ia = (e) => `Hello ${e || "World"} from common lib`;
-//#endregion
-export { ia as helloWorld, ra as isBlank, ta as isEmpty, na as isObject };
+export { ta as Player, aa as helloWorld, ia as isBlank, na as isEmpty, ra as isObject };

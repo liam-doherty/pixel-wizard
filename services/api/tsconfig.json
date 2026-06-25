@@ -9,6 +9,7 @@
         "outDir": "./dist",
         "composite": true
     },
-    "exclude": ["node_modules"],
-    "references": [{ "path": "../../libs/common" }]
+    "references": [{ "path": "../../libs/common" }],
+    "include": ["src/**/*"],
+    "exclude": ["src/**/*.test.ts"]
 }

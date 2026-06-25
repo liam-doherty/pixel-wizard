@@ -1,6 +1,6 @@
 import * as z from 'zod'
 
-const Player = z.object({
+export const Player = z.object({
     color: z.string(),
 })
 

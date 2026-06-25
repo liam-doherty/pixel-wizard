@@ -14,7 +14,7 @@
         "vite-plugin-dts": "catalog:"
     },
     "main": "./dist/common.js",
-    "types": "./dist/src/main.d.ts",
+    "types": "./dist/main.d.ts",
     "dependencies": {
         "zod": "catalog:"
     }

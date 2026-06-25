@@ -3,20 +3,25 @@
         "strict": true,
         "target": "es2023",
         "module": "esnext",
-        "lib": ["ES2023", "DOM"],
+        /*"lib": ["ES2023", "DOM"],*/
         "types": ["vite/client"],
         "skipLibCheck": true,
 
         /* Bundler mode */
         "moduleResolution": "bundler",
         "verbatimModuleSyntax": true,
-        "moduleDetection": "force",
+        /*"moduleDetection": "force",*/
+        "composite": true,
 
         /* Linting */
         "noUnusedLocals": true,
         "noUnusedParameters": true,
         "erasableSyntaxOnly": true,
-        "noFallthroughCasesInSwitch": true
+        "noFallthroughCasesInSwitch": true,
+
+        "outDir": "./dist",
+        "rootDir": "./src"
     },
-    "include": ["src/**/*"]
+    "include": ["src/**/*"],
+    "exclude": ["src/**/*.test.ts"]
 }
