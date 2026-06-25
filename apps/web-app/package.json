@@ -9,16 +9,17 @@
         "preview": "vite preview"
     },
     "dependencies": {
-        "@tailwindcss/vite": "^4.3.1",
+        "@tailwindcss/vite": "catalog:",
+        "@tanstack/solid-query": "catalog:",
         "common": "workspace:*",
-        "solid-js": "^1.9.12",
-        "tailwindcss": "^4.3.1"
+        "daisyui": "catalog:",
+        "solid-js": "catalog:",
+        "tailwindcss": "catalog:"
     },
     "devDependencies": {
-        "@types/node": "^24.12.3",
-        "daisyui": "^5.5.23",
-        "typescript": "~6.0.2",
-        "vite": "^8.0.12",
-        "vite-plugin-solid": "^2.11.12"
+        "@types/node": "catalog:",
+        "typescript": "catalog:",
+        "vite": "catalog:",
+        "vite-plugin-solid": "catalog:"
     }
 }
