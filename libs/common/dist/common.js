@@ -2699,7 +2699,7 @@ function ea(e, t) {
 	return /* @__PURE__ */ cr(e, t);
 }
 //#endregion
-//#region src/player.ts
+//#region src/player.js
 Ei({ color: ti() });
 //#endregion
 //#region src/main.ts

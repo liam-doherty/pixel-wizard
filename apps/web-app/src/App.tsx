@@ -4,32 +4,43 @@ import './App.css'
 import { isBlank, helloWorld } from 'common'
 //import type { Player } from 'common'
 
+import Layout from './Layout'
+import Grid2D from './grid2d/Grid2D'
+import {
+    DefaultPicker,
+    RGBPicker,
+} from './components/color-pickers/DefaultPicker'
+
 function App() {
-    const [count, setCount] = createSignal(0)
+    const [selectedColor, setSelectedColor] = createSignal('#000000')
+
+    const onChangeColor = (newCol: string) => {
+        setSelectedColor(newCol)
+    }
 
     return (
-        <>
-            <section id="center">
-                <div>
-                    <h1>Get started</h1>
-                    <p>
-                        Edit <code>src/App.tsx</code> and save to test{' '}
-                        <code>HMR</code>
-                    </p>
-                </div>
-                <button
-                    type="button"
-                    class="counter"
-                    onClick={() => setCount((count) => count + 1)}
-                >
-                    Count is {count()}
-                </button>
-                <p>sending hello - {helloWorld('Liam')}</p>
-                <p>false isBlank - {isBlank(false) ? 'true' : 'false'}</p>
-                <p>true isBlank - {isBlank(true) ? 'true' : 'false'}</p>
-                <p>Empty object isBlank - {isBlank({}) ? 'true' : 'false'}</p>
-            </section>
-        </>
+        <Layout>
+            <p>sending hello - {helloWorld('Liam')}</p>
+
+            <input
+                type="color"
+                value={selectedColor()}
+                onInput={(e) => onChangeColor(e.currentTarget.value)}
+            ></input>
+
+            <DefaultPicker
+                selectedColor={selectedColor()}
+                setSelectedColor={onChangeColor}
+            />
+
+            <RGBPicker
+                selectedColor={selectedColor()}
+                setSelectedColor={onChangeColor}
+            />
+            <div style="display: flex; justify-content: center;">
+                <Grid2D selectedColor={selectedColor()} />
+            </div>
+        </Layout>
     )
 }
 
