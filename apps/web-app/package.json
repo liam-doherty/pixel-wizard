@@ -9,6 +9,7 @@
         "preview": "vite preview"
     },
     "dependencies": {
+        "@fortawesome/fontawesome-free": "catalog:",
         "@tailwindcss/vite": "catalog:",
         "@tanstack/solid-query": "catalog:",
         "common": "workspace:*",

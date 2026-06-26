@@ -27,3 +27,4 @@ catalog:
   'globals': '^17.7.0'
   '@tanstack/solid-query': ^5.101.1
   '@hono/zod-validator': ^0.8.0
+  '@fortawesome/fontawesome-free': ^7.2.0

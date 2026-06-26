@@ -9,9 +9,11 @@
     },
     "dependencies": {
         "@hono/node-server": "catalog:",
-        "hono": "catalog:",
+        "@hono/zod-validator": "catalog:",
         "common": "workspace:*",
-        "@hono/zod-validator": "catalog:"
+        "hono": "catalog:",
+        "zod": "catalog:",
+        "sharp": "^0.35.2"
     },
     "devDependencies": {
         "@types/node": "catalog:",
