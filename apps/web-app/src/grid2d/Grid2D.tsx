@@ -1,54 +1,69 @@
-import { type Component, createSignal, createMemo, Index } from 'solid-js'
+import { type Component, createMemo, Index } from 'solid-js'
 
-const maxGridPixelWidth = 500
+const CANVAS_SIZE = 512
 
 interface Grid2DProps {
     selectedColor: string
+    cells: string[]
+    gridSize: number
+    onPaint: (index: number, color: string) => void
+    onSizeChange: (size: number) => void
+    onClear: () => void
 }
 
 const Grid2D: Component<Grid2DProps> = (props) => {
-    const [gridSideLength, setGridSideLength] = createSignal(10)
-    const gridTemplateString = createMemo(
-        () =>
-            `repeat(${gridSideLength()}, ${maxGridPixelWidth / gridSideLength()}px)`,
-    )
+    const cellSize = createMemo(() => Math.floor(CANVAS_SIZE / props.gridSize))
 
     return (
-        <div
-            style={{
-                display: 'inline-grid',
-                'grid-template-rows': gridTemplateString(),
-                'grid-template-columns': gridTemplateString(),
-                padding: '8px',
-                'background-color': 'white',
-            }}
-        >
-            <Index
-                each={Array.from({ length: gridSideLength() ** 2 })}
-                fallback={'Input a grid side length.'}
+        <div class="flex flex-col items-center gap-4">
+            <div class="flex items-center gap-3">
+                <span class="text-sm font-medium w-24">
+                    Grid {props.gridSize}×{props.gridSize}
+                </span>
+                <input
+                    type="range"
+                    min="4"
+                    max="32"
+                    value={props.gridSize}
+                    class="range range-xs w-36"
+                    onInput={(e) =>
+                        props.onSizeChange(parseInt(e.currentTarget.value))
+                    }
+                />
+                <button class="btn btn-xs btn-ghost" onClick={props.onClear}>
+                    Clear
+                </button>
+            </div>
+            <div
+                style={{
+                    display: 'grid',
+                    'grid-template-columns': `repeat(${props.gridSize}, ${cellSize()}px)`,
+                    'grid-template-rows': `repeat(${props.gridSize}, ${cellSize()}px)`,
+                    cursor: 'crosshair',
+                    border: '1px solid oklch(var(--bc) / 0.3)',
+                }}
             >
-                {(_item, i) => (
-                    <div
-                        id={'cell' + i}
-                        class="cell"
-                        style="outline: 1px solid black;"
-                        onMouseEnter={(event) => {
-                            const eventEl = event.currentTarget
-
-                            eventEl.style.outlineColor = props.selectedColor
-
-                            setTimeout(() => {
-                                eventEl.style.outlineColor = 'black'
-                            }, 500)
-                        }}
-                        onClick={(e) => {
-                            const eventEl = e.currentTarget
-
-                            eventEl.style.backgroundColor = props.selectedColor
-                        }}
-                    />
-                )}
-            </Index>
+                <Index each={props.cells}>
+                    {(color, i) => (
+                        <div
+                            style={{
+                                'background-color': color(),
+                                width: `${cellSize()}px`,
+                                height: `${cellSize()}px`,
+                                'border-right': '1px solid black',
+                                'border-bottom': '1px solid black',
+                            }}
+                            onClick={() =>
+                                props.onPaint(i, props.selectedColor)
+                            }
+                            onMouseEnter={(e) => {
+                                if (e.buttons === 1)
+                                    props.onPaint(i, props.selectedColor)
+                            }}
+                        />
+                    )}
+                </Index>
+            </div>
         </div>
     )
 }

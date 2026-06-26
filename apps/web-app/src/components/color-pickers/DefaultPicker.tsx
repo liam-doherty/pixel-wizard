@@ -7,23 +7,25 @@ interface PickerProps {
 
 export const DefaultPicker: Component<PickerProps> = (props) => {
     return (
-        <input
-            type="color"
-            value={props.selectedColor}
-            onInput={(e) => props.setSelectedColor(e.currentTarget.value)}
-        ></input>
+        <div class="flex flex-col gap-1">
+            <label class="text-xs font-semibold uppercase tracking-wide opacity-60">
+                Color
+            </label>
+            <input
+                type="color"
+                value={props.selectedColor}
+                class="w-full h-10 rounded cursor-pointer border border-base-300"
+                onInput={(e) => props.setSelectedColor(e.currentTarget.value)}
+            />
+        </div>
     )
 }
 
 function hexToRgb(hex: string) {
-    // Remove the hash if it's there
     hex = hex.replace('#', '')
-
-    // Extract channels and parse as base-16 integers
     const r = parseInt(hex.substring(0, 2), 16)
     const g = parseInt(hex.substring(2, 4), 16)
     const b = parseInt(hex.substring(4, 6), 16)
-
     return { r, g, b }
 }
 
@@ -34,49 +36,51 @@ const rgbToHex = (r: number, g: number, b: number) => {
 
 export const RGBPicker: Component<PickerProps> = (props) => {
     const [red, setRed] = createSignal(hexToRgb(props.selectedColor).r)
-    const [blue, setBlue] = createSignal(hexToRgb(props.selectedColor).g)
-    const [green, setGreen] = createSignal(hexToRgb(props.selectedColor).b)
+    const [green, setGreen] = createSignal(hexToRgb(props.selectedColor).g)
+    const [blue, setBlue] = createSignal(hexToRgb(props.selectedColor).b)
 
     createEffect(() => {
         props.setSelectedColor(rgbToHex(red(), green(), blue()))
     })
 
-    //update sliders when changing from different picker
     createEffect(() => {
         setRed(hexToRgb(props.selectedColor).r)
         setGreen(hexToRgb(props.selectedColor).g)
         setBlue(hexToRgb(props.selectedColor).b)
     })
 
+    const channel = (
+        label: string,
+        value: () => number,
+        set: (v: number) => void,
+        color: string,
+    ) => (
+        <div class="flex flex-col gap-1">
+            <div class="flex justify-between text-xs opacity-70">
+                <span class="font-semibold">{label}</span>
+                <span class="font-mono">{value()}</span>
+            </div>
+            <input
+                type="range"
+                min="0"
+                max="255"
+                value={value()}
+                class="range range-xs"
+                style={{ 'accent-color': color }}
+                onInput={(e) => set(parseInt(e.currentTarget.value))}
+            />
+        </div>
+    )
+
     return (
-        <>
-            <input
-                type="range"
-                min="0"
-                max="255"
-                value={red()}
-                class={
-                    'range range-xs [--range-bg:' + rgbToHex(red(), 0, 0) + ']' //not working
-                }
-                onInput={(e) => setRed(parseInt(e.currentTarget.value))}
-            />
-            <input
-                type="range"
-                min="0"
-                max="255"
-                value={green()}
-                class="range range-xs"
-                onInput={(e) => setGreen(parseInt(e.currentTarget.value))}
-            />
-            <input
-                type="range"
-                min="0"
-                max="255"
-                value={blue()}
-                class="range range-xs"
-                onInput={(e) => setBlue(parseInt(e.currentTarget.value))}
-            />
-        </>
+        <div class="flex flex-col gap-3">
+            <label class="text-xs font-semibold uppercase tracking-wide opacity-60">
+                RGB
+            </label>
+            {channel('R', red, setRed, '#ef4444')}
+            {channel('G', green, setGreen, '#22c55e')}
+            {channel('B', blue, setBlue, '#3b82f6')}
+        </div>
     )
 }
 

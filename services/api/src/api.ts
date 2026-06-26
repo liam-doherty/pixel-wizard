@@ -1,7 +1,7 @@
 import { Hono } from 'hono'
 import { cors } from 'hono/cors'
 import { zValidator } from '@hono/zod-validator'
-import { Player } from 'common'
+import { Player, PixelImage } from 'common'
 
 export function makeApi() {
     const app = new Hono()
@@ -13,10 +13,12 @@ export function makeApi() {
 
     app.post('/posts', zValidator('json', Player), (c) => {
         const validated = c.req.valid('json')
+        return c.json({ message: 'valid!', color: validated.color })
+    })
 
-        return c.json({
-            message: 'valid!',
-        })
+    app.post('/images', zValidator('json', PixelImage), (c) => {
+        const image = c.req.valid('json')
+        return c.json(image)
     })
 
     return app
