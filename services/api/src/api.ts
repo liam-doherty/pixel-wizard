@@ -26,6 +26,36 @@ export function makeApi() {
     })
 
     app.post(
+        '/images/png',
+        zValidator('query', z.object({ scale: z.coerce.number().int().min(1).max(64).default(1) })),
+        zValidator('json', PixelImage),
+        async (c) => {
+            const { scale } = c.req.valid('query')
+            const { width, height, cells } = c.req.valid('json')
+
+            const raw = Buffer.alloc(width * height * 3)
+            for (let i = 0; i < cells.length; i++) {
+                const hex = cells[i].slice(1)
+                raw[i * 3] = parseInt(hex.slice(0, 2), 16)
+                raw[i * 3 + 1] = parseInt(hex.slice(2, 4), 16)
+                raw[i * 3 + 2] = parseInt(hex.slice(4, 6), 16)
+            }
+
+            const png = await sharp(raw, { raw: { width, height, channels: 3 } })
+                .resize(width * scale, height * scale, { kernel: 'nearest' })
+                .png()
+                .toBuffer()
+
+            return new Response(new Uint8Array(png), {
+                headers: {
+                    'Content-Type': 'image/png',
+                    'Content-Disposition': 'attachment; filename="pixel-image.png"',
+                },
+            })
+        },
+    )
+
+    app.post(
         '/images/upload',
         zValidator(
             'query',

@@ -10,6 +10,7 @@ import { useMutation } from '@tanstack/solid-query'
 import SideMenu from './components/SideMenu'
 import { RGBPicker } from './components/color-pickers/RGBPicker'
 import { FavouritePicker } from './components/color-pickers/FavouritePicker'
+import { CANVAS_SIZE } from './helpers/Consts'
 
 const DEFAULT_SIZE = 16
 
@@ -48,13 +49,22 @@ function App() {
     }
 
     const imageMutation = useMutation(() => ({
-        mutationFn: (image: PixelImage) =>
-            fetch('http://localhost:3000/images', {
+        mutationFn: (image: PixelImage) => {
+            const scale = Math.floor(CANVAS_SIZE / image.width)
+            return fetch(`http://localhost:3000/images/png?scale=${scale}`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(image),
-            }).then((res) => res.json() as Promise<PixelImage>),
-        onSuccess: (image: PixelImage) => loadImage(image),
+            }).then((res) => res.blob())
+        },
+        onSuccess: (blob: Blob) => {
+            const url = URL.createObjectURL(blob)
+            const a = document.createElement('a')
+            a.href = url
+            a.download = 'pixel-image.png'
+            a.click()
+            URL.revokeObjectURL(url)
+        },
     }))
 
     const uploadMutation = useMutation(() => ({

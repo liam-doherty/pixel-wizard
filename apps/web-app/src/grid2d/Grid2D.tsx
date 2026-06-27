@@ -1,6 +1,5 @@
 import { type Component, createMemo, Index } from 'solid-js'
-
-const CANVAS_SIZE = 512
+import { CANVAS_SIZE } from '../helpers/Consts'
 
 interface Grid2DProps {
     selectedColor: string
