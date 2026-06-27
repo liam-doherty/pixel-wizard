@@ -6,15 +6,18 @@ export const RGBPicker: Component<PickerProps> = (props) => {
     const [red, setRed] = createSignal(hexToRgb(props.selectedColor).r)
     const [green, setGreen] = createSignal(hexToRgb(props.selectedColor).g)
     const [blue, setBlue] = createSignal(hexToRgb(props.selectedColor).b)
+    const [alpha, setAlpha] = createSignal(hexToRgb(props.selectedColor).a)
 
     createEffect(() => {
-        props.setSelectedColor(rgbToHex(red(), green(), blue()))
+        props.setSelectedColor(rgbToHex(red(), green(), blue(), alpha()))
     })
 
     createEffect(() => {
-        setRed(hexToRgb(props.selectedColor).r)
-        setGreen(hexToRgb(props.selectedColor).g)
-        setBlue(hexToRgb(props.selectedColor).b)
+        const { r, g, b, a } = hexToRgb(props.selectedColor)
+        setRed(r)
+        setGreen(g)
+        setBlue(b)
+        setAlpha(a)
     })
 
     const channel = (
@@ -43,11 +46,12 @@ export const RGBPicker: Component<PickerProps> = (props) => {
     return (
         <div class="flex flex-col gap-3">
             <label class="text-xs font-semibold uppercase tracking-wide opacity-60">
-                RGB
+                RGBA
             </label>
             {channel('R', red, setRed, '#ef4444')}
             {channel('G', green, setGreen, '#22c55e')}
             {channel('B', blue, setBlue, '#3b82f6')}
+            {channel('A', alpha, setAlpha, '#a855f7')}
         </div>
     )
 }

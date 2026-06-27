@@ -40,6 +40,9 @@ const Grid2D: Component<Grid2DProps> = (props) => {
                     'grid-template-rows': `repeat(${props.gridSize}, ${cellSize()}px)`,
                     cursor: 'crosshair',
                     border: '1px solid oklch(var(--bc) / 0.3)',
+                    'background-image':
+                        'repeating-conic-gradient(#cbd5e1 0% 25%, #f8fafc 0% 50%)',
+                    'background-size': '16px 16px',
                 }}
             >
                 <Index each={props.cells}>

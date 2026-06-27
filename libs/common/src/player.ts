@@ -5,7 +5,7 @@ export const Player = z.object({
 })
 export type Player = z.infer<typeof Player>
 
-const HexColor = z.string().regex(/^#[0-9a-fA-F]{6}$/)
+const HexColor = z.string().regex(/^#[0-9a-fA-F]{6}([0-9a-fA-F]{2})?$/)
 
 export const PixelImage = z
     .object({

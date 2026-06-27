@@ -33,15 +33,16 @@ export function makeApi() {
             const { scale } = c.req.valid('query')
             const { width, height, cells } = c.req.valid('json')
 
-            const raw = Buffer.alloc(width * height * 3)
+            const raw = Buffer.alloc(width * height * 4)
             for (let i = 0; i < cells.length; i++) {
                 const hex = cells[i].slice(1)
-                raw[i * 3] = parseInt(hex.slice(0, 2), 16)
-                raw[i * 3 + 1] = parseInt(hex.slice(2, 4), 16)
-                raw[i * 3 + 2] = parseInt(hex.slice(4, 6), 16)
+                raw[i * 4] = parseInt(hex.slice(0, 2), 16)
+                raw[i * 4 + 1] = parseInt(hex.slice(2, 4), 16)
+                raw[i * 4 + 2] = parseInt(hex.slice(4, 6), 16)
+                raw[i * 4 + 3] = hex.length === 8 ? parseInt(hex.slice(6, 8), 16) : 255
             }
 
-            const png = await sharp(raw, { raw: { width, height, channels: 3 } })
+            const png = await sharp(raw, { raw: { width, height, channels: 4 } })
                 .resize(width * scale, height * scale, { kernel: 'nearest' })
                 .png()
                 .toBuffer()

@@ -2969,7 +2969,7 @@ function Ca(e, t) {
 }
 //#endregion
 //#region src/player.ts
-var wa = Yi({ color: bi() }), Ta = bi().regex(/^#[0-9a-fA-F]{6}$/), Ea = Yi({
+var wa = Yi({ color: bi() }), Ta = bi().regex(/^#[0-9a-fA-F]{6}([0-9a-fA-F]{2})?$/), Ea = Yi({
 	width: Bi().int().min(4).max(32),
 	height: Bi().int().min(4).max(32),
 	cells: qi(Ta)
