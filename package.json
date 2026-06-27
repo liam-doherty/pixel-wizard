@@ -4,7 +4,7 @@
     "description": "",
     "main": "index.js",
     "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1",
+        "test": "vitest run",
         "lint": "eslint .",
         "format": "prettier --write .",
         "dev:common": "pnpm --filter common build --watch",
@@ -24,14 +24,15 @@
     },
     "type": "module",
     "devDependencies": {
-        "typescript": "catalog:",
-        "@types/node": "catalog:",
         "@eslint/js": "catalog:",
+        "@types/node": "catalog:",
         "eslint": "catalog:",
         "eslint-config-prettier": "catalog:",
         "eslint-plugin-prettier": "catalog:",
         "globals": "catalog:",
         "prettier": "catalog:",
-        "typescript-eslint": "catalog:"
+        "typescript": "catalog:",
+        "typescript-eslint": "catalog:",
+        "vitest": "catalog:"
     }
 }
