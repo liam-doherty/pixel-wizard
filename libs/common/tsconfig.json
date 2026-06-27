@@ -1,6 +1,5 @@
 {
     "compilerOptions": {
-        "strict": true,
         "target": "es2023",
         "module": "esnext",
         /*"lib": ["ES2023", "DOM"],*/
@@ -9,16 +8,7 @@
 
         /* Bundler mode */
         "moduleResolution": "bundler",
-        "verbatimModuleSyntax": true,
-        /*"moduleDetection": "force",*/
         "composite": true,
-
-        /* Linting */
-        "noUnusedLocals": true,
-        "noUnusedParameters": true,
-        "erasableSyntaxOnly": true,
-        "noFallthroughCasesInSwitch": true,
-
         "outDir": "./dist",
         "rootDir": "./src"
     },

@@ -24,6 +24,8 @@
     },
     "type": "module",
     "devDependencies": {
+        "typescript": "catalog:",
+        "@types/node": "catalog:",
         "@eslint/js": "catalog:",
         "eslint": "catalog:",
         "eslint-config-prettier": "catalog:",

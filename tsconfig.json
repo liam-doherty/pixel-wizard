@@ -1,0 +1,14 @@
+{
+    "files": [],
+    "references": [
+        {
+            "path": "./libs/common"
+        },
+        {
+            "path": "./services/api"
+        },
+        {
+            "path": "./apps/web-app"
+        }
+    ]
+}
