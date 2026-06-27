@@ -9,6 +9,7 @@ import { DefaultPicker } from './components/color-pickers/DefaultPicker'
 import { useMutation } from '@tanstack/solid-query'
 import SideMenu from './components/SideMenu'
 import { RGBPicker } from './components/color-pickers/RGBPicker'
+import { FavouritePicker } from './components/color-pickers/FavouritePicker'
 
 const DEFAULT_SIZE = 16
 
@@ -97,6 +98,11 @@ function App() {
                             />
                             <div class="divider my-0" />
                             <RGBPicker
+                                selectedColor={selectedColor()}
+                                setSelectedColor={setSelectedColor}
+                            />
+                            <div class="divider my-0" />
+                            <FavouritePicker
                                 selectedColor={selectedColor()}
                                 setSelectedColor={setSelectedColor}
                             />
