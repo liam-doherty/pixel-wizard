@@ -1,12 +1,14 @@
-import { createSignal, Show } from 'solid-js'
+import { createEffect, createSignal, For, Show } from 'solid-js'
+import { createStore } from 'solid-js/store'
 
 import './App.css'
 import { type PixelImage } from 'common'
 
 import Layout from './Layout'
 import Grid2D from './grid2d/Grid2D'
+import PixelImagePreview from './grid2d/PixelImagePreview'
 import { DefaultPicker } from './components/color-pickers/DefaultPicker'
-import { useMutation } from '@tanstack/solid-query'
+import { useMutation, useQuery } from '@tanstack/solid-query'
 import SideMenu from './components/SideMenu'
 import { RGBPicker } from './components/color-pickers/RGBPicker'
 import { FavouritePicker } from './components/color-pickers/FavouritePicker'
@@ -19,6 +21,7 @@ export enum MenuOption {
     Image,
     Ai,
     Save,
+    Samples,
 }
 
 function App() {
@@ -100,6 +103,21 @@ function App() {
         onSuccess: (image: PixelImage) => loadImage(image),
     }))
 
+    const [samplesStore, setSamplesStore] = createStore<PixelImage[]>([])
+
+    const samplesQuery = useQuery(() => ({
+        queryKey: ['samples'],
+        queryFn: () =>
+            fetch('http://localhost:3000/images/samples').then(
+                (res) => res.json() as Promise<PixelImage[]>,
+            ),
+        enabled: selectedMenuItem() === MenuOption.Samples,
+    }))
+
+    createEffect(() => {
+        if (samplesQuery.data) setSamplesStore(samplesQuery.data)
+    })
+
     const saveImage = () => {
         imageMutation.mutate({
             width: gridSize(),
@@ -119,7 +137,7 @@ function App() {
                 selectedMenuOption={selectedMenuItem()}
                 setSelectedMenuOption={setSelectedMenuItem}
             />
-            <div class="flex flex-1 gap-4 p-4">
+            <div class="flex flex-1 gap-4 p-4 min-h-0">
                 <Show when={selectedMenuItem() === MenuOption.Color}>
                     <div class="card bg-base-200 w-56 shrink-0 h-fit">
                         <div class="card-body gap-5 p-4">
@@ -242,6 +260,62 @@ function App() {
                             >
                                 {imageMutation.isPending ? 'Saving...' : 'PNG'}
                             </button>
+                        </div>
+                    </div>
+                </Show>
+
+                <Show when={selectedMenuItem() === MenuOption.Samples}>
+                    <div class="card bg-base-200 w-56 shrink-0 self-stretch">
+                        <div class="card-body gap-4 p-4 flex flex-col h-full min-h-0">
+                            <label class="text-xs font-semibold uppercase tracking-wide opacity-60 shrink-0">
+                                Samples
+                            </label>
+                            <button
+                                class="btn btn-sm btn-primary w-full shrink-0"
+                                onClick={() =>
+                                    setSamplesStore(samplesStore.length, {
+                                        width: gridSize(),
+                                        height: gridSize(),
+                                        cells: cells(),
+                                    })
+                                }
+                            >
+                                Save current image
+                            </button>
+                            <Show when={samplesQuery.isLoading}>
+                                <span class="loading loading-spinner loading-sm shrink-0" />
+                            </Show>
+                            <Show when={samplesQuery.isError}>
+                                <p class="text-error text-xs shrink-0">
+                                    Failed to load samples
+                                </p>
+                            </Show>
+                            <div class="flex flex-col gap-4 overflow-y-auto flex-1 min-h-0">
+                                <For each={samplesStore}>
+                                    {(image, i) => (
+                                        <div class="relative group rounded hover:ring-2 hover:ring-primary transition-all">
+                                            <PixelImagePreview
+                                                image={image}
+                                                onClick={() => loadImage(image)}
+                                            />
+                                            <button
+                                                class="absolute top-1 right-1 opacity-0 group-hover:opacity-100 transition-opacity btn btn-xs btn-circle btn-error"
+                                                onClick={(e) => {
+                                                    e.stopPropagation()
+                                                    setSamplesStore((s) =>
+                                                        s.filter(
+                                                            (_, idx) =>
+                                                                idx !== i(),
+                                                        ),
+                                                    )
+                                                }}
+                                            >
+                                                ✕
+                                            </button>
+                                        </div>
+                                    )}
+                                </For>
+                            </div>
                         </div>
                     </div>
                 </Show>

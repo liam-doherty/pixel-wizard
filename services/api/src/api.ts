@@ -5,6 +5,7 @@ import { Player, PixelImage } from 'common'
 import sharp from 'sharp'
 import * as z from 'zod'
 import { GoogleGenAI } from '@google/genai'
+import { SampleImages } from './SampleImages.js'
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024 // 5 MB
 
@@ -14,6 +15,10 @@ export function makeApi() {
 
     app.get('/', (c) => {
         return c.text('Hello Hono!')
+    })
+
+    app.get('/images/samples', (c) => {
+        return c.json(SampleImages)
     })
 
     app.post('/posts', zValidator('json', Player), (c) => {

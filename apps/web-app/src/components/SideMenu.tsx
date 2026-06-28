@@ -33,11 +33,11 @@ export const SideMenu: Component<SideMenuProps> = (props) => {
                     }
                 >
                     <i
-                        class="fa-solid fa-image fa-xl"
+                        class="fa-solid fa-file-import fa-xl"
                         style="line-height: 20px;"
                     ></i>
                     <label class="text-xs font-semibold uppercase tracking-wide opacity-60">
-                        Image
+                        Import
                     </label>
                 </a>
             </li>
@@ -61,11 +61,27 @@ export const SideMenu: Component<SideMenuProps> = (props) => {
                     onClick={() => props.setSelectedMenuOption(MenuOption.Save)}
                 >
                     <i
-                        class="fa-solid fa-floppy-disk fa-xl"
+                        class="fa-solid fa-circle-arrow-down fa-xl"
                         style="line-height: 20px;"
                     ></i>
                     <label class="text-xs font-semibold uppercase tracking-wide opacity-60">
-                        Save
+                        Download
+                    </label>
+                </a>
+            </li>
+            <li>
+                <a
+                    class="flex flex-col h-auto"
+                    onClick={() =>
+                        props.setSelectedMenuOption(MenuOption.Samples)
+                    }
+                >
+                    <i
+                        class="fa-solid fa-images fa-xl"
+                        style="line-height: 20px;"
+                    ></i>
+                    <label class="text-xs font-semibold uppercase tracking-wide opacity-60">
+                        Collection
                     </label>
                 </a>
             </li>
