@@ -7,11 +7,11 @@ import { type PixelImage } from 'common'
 import Layout from './Layout'
 import Grid2D from './grid2d/Grid2D'
 import SideMenu from './components/SideMenu'
-import ColorMenuContent from './components/ColorMenuContent'
-import ImportMenuContent from './components/ImportMenuContent'
-import AiMenuContent from './components/AiMenuContent'
-import SaveMenuContent from './components/SaveMenuContent'
-import SamplesMenuContent from './components/SamplesMenuContent'
+import ColorMenuContent from './components/menu-content/ColorMenuContent'
+import ImportMenuContent from './components/menu-content/ImportMenuContent'
+import AiMenuContent from './components/menu-content/AiMenuContent'
+import SaveMenuContent from './components/menu-content/SaveMenuContent'
+import SamplesMenuContent from './components/menu-content/SamplesMenuContent'
 
 const DEFAULT_SIZE = 16
 

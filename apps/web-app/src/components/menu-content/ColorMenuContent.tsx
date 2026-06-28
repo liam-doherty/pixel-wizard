@@ -1,8 +1,8 @@
 import { type Component } from 'solid-js'
-import { PickerProps } from './color-pickers/IPickerProps'
-import DefaultPicker from './color-pickers/DefaultPicker'
-import { RGBPicker } from './color-pickers/RGBPicker'
-import { FavouritePicker } from './color-pickers/FavouritePicker'
+import { PickerProps } from '../color-pickers/IPickerProps'
+import DefaultPicker from '../color-pickers/DefaultPicker'
+import { RGBPicker } from '../color-pickers/RGBPicker'
+import { FavouritePicker } from '../color-pickers/FavouritePicker'
 import MenuContentParent from './MenuContentParent'
 
 export const ColorMenuContent: Component<PickerProps> = (props) => {
