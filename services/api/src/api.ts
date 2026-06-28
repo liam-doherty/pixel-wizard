@@ -93,16 +93,18 @@ export function makeApi() {
 
             const buffer = Buffer.from(await file.arrayBuffer())
 
-            const { data } = await sharp(buffer)
+            const { data, info } = await sharp(buffer)
+                .flatten({ background: '#ffffff' })
                 .resize(size, size, { fit: 'cover' })
                 .raw()
                 .toBuffer({ resolveWithObject: true })
 
+            const { channels } = info
             const cells: string[] = []
             for (let i = 0; i < size * size; i++) {
-                const r = data[i * 3]
-                const g = data[i * 3 + 1]
-                const b = data[i * 3 + 2]
+                const r = data[i * channels]
+                const g = data[i * channels + 1]
+                const b = data[i * channels + 2]
                 cells.push(
                     '#' +
                         r.toString(16).padStart(2, '0') +
