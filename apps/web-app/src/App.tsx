@@ -172,6 +172,16 @@ function App() {
                     </div>
                 </Show>
 
+                <Show when={selectedMenuItem() === MenuOption.Ai}>
+                    <div class="card bg-base-200 w-56 shrink-0 h-fit">
+                        <div class="card-body gap-5 p-4">
+                            <label class="text-xs font-semibold uppercase tracking-wide opacity-60">
+                                Generate
+                            </label>
+                        </div>
+                    </div>
+                </Show>
+
                 <div class="flex flex-1 items-center justify-center">
                     <Grid2D
                         selectedColor={selectedColor()}

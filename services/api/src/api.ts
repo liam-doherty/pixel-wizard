@@ -27,7 +27,12 @@ export function makeApi() {
 
     app.post(
         '/images/png',
-        zValidator('query', z.object({ scale: z.coerce.number().int().min(1).max(64).default(1) })),
+        zValidator(
+            'query',
+            z.object({
+                scale: z.coerce.number().int().min(1).max(64).default(1),
+            }),
+        ),
         zValidator('json', PixelImage),
         async (c) => {
             const { scale } = c.req.valid('query')
@@ -39,10 +44,13 @@ export function makeApi() {
                 raw[i * 4] = parseInt(hex.slice(0, 2), 16)
                 raw[i * 4 + 1] = parseInt(hex.slice(2, 4), 16)
                 raw[i * 4 + 2] = parseInt(hex.slice(4, 6), 16)
-                raw[i * 4 + 3] = hex.length === 8 ? parseInt(hex.slice(6, 8), 16) : 255
+                raw[i * 4 + 3] =
+                    hex.length === 8 ? parseInt(hex.slice(6, 8), 16) : 255
             }
 
-            const png = await sharp(raw, { raw: { width, height, channels: 4 } })
+            const png = await sharp(raw, {
+                raw: { width, height, channels: 4 },
+            })
                 .resize(width * scale, height * scale, { kernel: 'nearest' })
                 .png()
                 .toBuffer()
@@ -50,7 +58,8 @@ export function makeApi() {
             return new Response(new Uint8Array(png), {
                 headers: {
                     'Content-Type': 'image/png',
-                    'Content-Disposition': 'attachment; filename="pixel-image.png"',
+                    'Content-Disposition':
+                        'attachment; filename="pixel-image.png"',
                 },
             })
         },
