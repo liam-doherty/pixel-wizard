@@ -1,7 +1,7 @@
 import { type Component } from 'solid-js'
 import { type PixelImage } from 'common'
 import { useMutation } from '@tanstack/solid-query'
-import { CANVAS_SIZE } from '../../helpers/Consts'
+import { API_BASE_URL, CANVAS_SIZE } from '../../helpers/Consts'
 import MenuContentParent from './MenuContentParent'
 
 interface SaveMenuContentProps {
@@ -13,7 +13,7 @@ const SaveMenuContent: Component<SaveMenuContentProps> = (props) => {
     const imageMutation = useMutation(() => ({
         mutationFn: (image: PixelImage) => {
             const scale = Math.floor(CANVAS_SIZE / image.width)
-            return fetch(`http://localhost:3000/images/png?scale=${scale}`, {
+            return fetch(`${API_BASE_URL}/images/png?scale=${scale}`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(image),

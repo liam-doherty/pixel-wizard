@@ -2,6 +2,7 @@ import { createEffect, For, Show, type Component } from 'solid-js'
 import { type SetStoreFunction } from 'solid-js/store'
 import { type PixelImage } from 'common'
 import { useQuery } from '@tanstack/solid-query'
+import { API_BASE_URL } from '../../helpers/Consts'
 import PixelImagePreview from '../../grid2d/PixelImagePreview'
 
 interface SamplesMenuContentProps {
@@ -15,13 +16,14 @@ const SamplesMenuContent: Component<SamplesMenuContentProps> = (props) => {
     const samplesQuery = useQuery(() => ({
         queryKey: ['samples'],
         queryFn: () =>
-            fetch('http://localhost:3000/images/samples').then(
+            fetch(`${API_BASE_URL}/images/samples`).then(
                 (res) => res.json() as Promise<PixelImage[]>,
             ),
     }))
 
     createEffect(() => {
-        if (samplesQuery.data) props.setStore(samplesQuery.data)
+        if (samplesQuery.data && props.store.length === 0)
+            props.setStore(samplesQuery.data)
     })
 
     return (

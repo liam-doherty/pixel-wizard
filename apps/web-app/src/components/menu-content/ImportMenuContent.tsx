@@ -1,6 +1,7 @@
 import { type Component } from 'solid-js'
 import { type PixelImage } from 'common'
 import { useMutation } from '@tanstack/solid-query'
+import { API_BASE_URL } from '../../helpers/Consts'
 import MenuContentParent from './MenuContentParent'
 
 interface ImportMenuContentProps {
@@ -14,7 +15,7 @@ const ImportMenuContent: Component<ImportMenuContentProps> = (props) => {
             const form = new FormData()
             form.append('file', file)
             return fetch(
-                `http://localhost:3000/images/upload?size=${props.gridSize}`,
+                `${API_BASE_URL}/images/upload?size=${props.gridSize}`,
                 { method: 'POST', body: form },
             ).then((res) => res.json() as Promise<PixelImage>)
         },

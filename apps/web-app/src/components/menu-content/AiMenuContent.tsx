@@ -1,6 +1,7 @@
 import { createSignal, type Component } from 'solid-js'
 import { type PixelImage } from 'common'
 import { useMutation } from '@tanstack/solid-query'
+import { API_BASE_URL } from '../../helpers/Consts'
 import MenuContentParent from './MenuContentParent'
 
 interface AiMenuContentProps {
@@ -13,7 +14,7 @@ const AiMenuContent: Component<AiMenuContentProps> = (props) => {
 
     const generateMutation = useMutation(() => ({
         mutationFn: () =>
-            fetch('http://localhost:3000/images/generate', {
+            fetch(`${API_BASE_URL}/images/generate`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
