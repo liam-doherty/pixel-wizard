@@ -4,6 +4,7 @@ import { zValidator } from '@hono/zod-validator'
 import { Player, PixelImage } from 'common'
 import sharp from 'sharp'
 import * as z from 'zod'
+import { GoogleGenAI } from '@google/genai'
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024 // 5 MB
 
@@ -111,6 +112,71 @@ export function makeApi() {
                 cells,
             }
             return c.json(image)
+        },
+    )
+
+    app.post(
+        '/images/generate',
+        zValidator(
+            'json',
+            z.object({
+                description: z.string().min(1).max(500),
+                size: z.number().int().min(4).max(32),
+            }),
+        ),
+        async (c) => {
+            const { description, size } = c.req.valid('json')
+
+            const apiKey = process.env.GEMINI_API_KEY
+            const cloud = process.env.GOOGLE_CLOUD_PROJECT
+            if (!apiKey) {
+                return c.json({ error: 'GEMINI_API_KEY not configured' }, 500)
+            }
+
+            const genAi = new GoogleGenAI({
+                apiKey: apiKey,
+            })
+
+            const prompt = `Generate a pixel art image of: ${description}.
+The image must be exactly ${size} pixels wide and ${size} pixels tall (${size * size} cells total).
+Return a JSON object with:
+- width: ${size}
+- height: ${size}
+- cells: an array of exactly ${size * size} hex color strings (e.g. "#ff0000"), row by row from top-left to bottom-right`
+
+            console.log(prompt)
+
+            const response = await genAi.models.generateContent({
+                model: 'gemini-2.5-flash',
+                contents: prompt,
+                config: {
+                    responseMimeType: 'application/json',
+                    responseJsonSchema: z.toJSONSchema(PixelImage),
+                },
+            })
+
+            const raw = JSON.parse(response.text ?? 'null')
+            const expected = size * size
+            if (raw && Array.isArray(raw.cells)) {
+                if (raw.cells.length > expected) {
+                    raw.cells = raw.cells.slice(0, expected)
+                } else while (raw.cells.length < expected) {
+                    raw.cells.push('#ffffff')
+                }
+            }
+            const parsed = PixelImage.safeParse(raw)
+
+            if (!parsed.success) {
+                return c.json(
+                    {
+                        error: 'Gemini returned an invalid image',
+                        details: parsed.error.issues,
+                    },
+                    500,
+                )
+            }
+
+            return c.json(parsed.data)
         },
     )
 

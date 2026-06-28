@@ -18,6 +18,7 @@ export enum MenuOption {
     Color,
     Image,
     Ai,
+    Save,
 }
 
 function App() {
@@ -25,6 +26,7 @@ function App() {
         MenuOption.Color,
     )
     const [selectedColor, setSelectedColor] = createSignal('#000000')
+    const [aiDescription, setAiDescription] = createSignal('')
     const [gridSize, setGridSize] = createSignal(DEFAULT_SIZE)
     const [cells, setCells] = createSignal<string[]>(
         Array(DEFAULT_SIZE ** 2).fill('#ffffff'),
@@ -65,6 +67,25 @@ function App() {
             a.click()
             URL.revokeObjectURL(url)
         },
+    }))
+
+    const generateMutation = useMutation(() => ({
+        mutationFn: ({
+            description,
+            size,
+        }: {
+            description: string
+            size: number
+        }) =>
+            fetch('http://localhost:3000/images/generate', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ description, size }),
+            }).then((res) => {
+                if (!res.ok) throw new Error('Generation failed')
+                return res.json() as Promise<PixelImage>
+            }),
+        onSuccess: (image: PixelImage) => loadImage(image),
     }))
 
     const uploadMutation = useMutation(() => ({
@@ -128,14 +149,6 @@ function App() {
                                     {selectedColor()}
                                 </span>
                             </div>
-                            <div class="divider my-0" />
-                            <button
-                                class="btn btn-primary btn-sm"
-                                disabled={imageMutation.isPending}
-                                onClick={saveImage}
-                            >
-                                {imageMutation.isPending ? 'Saving...' : 'Save'}
-                            </button>
                         </div>
                     </div>
                 </Show>
@@ -178,6 +191,57 @@ function App() {
                             <label class="text-xs font-semibold uppercase tracking-wide opacity-60">
                                 Generate
                             </label>
+                            <textarea
+                                class="textarea textarea-sm w-full resize-none"
+                                rows={4}
+                                placeholder="Describe your pixel art..."
+                                maxLength={500}
+                                disabled={generateMutation.isPending}
+                                value={aiDescription()}
+                                onInput={(e) =>
+                                    setAiDescription(e.currentTarget.value)
+                                }
+                            />
+                            {generateMutation.isError && (
+                                <p class="text-error text-xs">
+                                    {generateMutation.error?.message ??
+                                        'Generation failed'}
+                                </p>
+                            )}
+                            <button
+                                class="btn btn-primary btn-sm"
+                                disabled={
+                                    generateMutation.isPending ||
+                                    !aiDescription().trim()
+                                }
+                                onClick={() =>
+                                    generateMutation.mutate({
+                                        description: aiDescription().trim(),
+                                        size: gridSize(),
+                                    })
+                                }
+                            >
+                                {generateMutation.isPending
+                                    ? 'Generating...'
+                                    : 'Generate'}
+                            </button>
+                        </div>
+                    </div>
+                </Show>
+
+                <Show when={selectedMenuItem() === MenuOption.Save}>
+                    <div class="card bg-base-200 w-56 shrink-0 h-fit">
+                        <div class="card-body gap-5 p-4">
+                            <label class="text-xs font-semibold uppercase tracking-wide opacity-60">
+                                Save as
+                            </label>
+                            <button
+                                class="btn btn-primary btn-sm"
+                                disabled={imageMutation.isPending}
+                                onClick={saveImage}
+                            >
+                                {imageMutation.isPending ? 'Saving...' : 'PNG'}
+                            </button>
                         </div>
                     </div>
                 </Show>

@@ -3,17 +3,19 @@
     "private": true,
     "type": "module",
     "scripts": {
-        "dev": "tsx watch src/index.ts",
+        "dev": "tsx watch --env-file=.env src/index.ts",
         "build": "tsc",
         "start": "node dist/index.js"
     },
     "dependencies": {
+        "@google/genai": "^2.10.0",
         "@hono/node-server": "catalog:",
         "@hono/zod-validator": "catalog:",
         "common": "workspace:*",
         "hono": "catalog:",
+        "sharp": "^0.35.2",
         "zod": "catalog:",
-        "sharp": "^0.35.2"
+        "zod-to-json-schema": "^3.25.2"
     },
     "devDependencies": {
         "@types/node": "catalog:",

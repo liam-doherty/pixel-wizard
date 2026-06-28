@@ -3,7 +3,9 @@ packages:
   - 'libs/*'
   - 'services/*'
 allowBuilds:
+  '@google/genai': set this to true or false
   esbuild: set this to true or false
+  protobufjs: set this to true or false
 catalog:
   '@types/node': '^24.12.3'
   '@hono/node-server': '^2.0.6'
