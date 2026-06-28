@@ -1,7 +1,7 @@
 import { type Component } from 'solid-js'
 import { type PixelImage } from 'common'
 import { useMutation } from '@tanstack/solid-query'
-import { CANVAS_SIZE } from '../helpers/Consts'
+import { CANVAS_SIZE } from '../../helpers/Consts'
 import MenuContentParent from './MenuContentParent'
 
 interface SaveMenuContentProps {

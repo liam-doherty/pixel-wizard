@@ -100,6 +100,7 @@ function App() {
                         cells={cells()}
                         gridSize={gridSize()}
                         onPaint={paint}
+                        onColorPick={setSelectedColor}
                         onSizeChange={changeSize}
                         onClear={() =>
                             setCells(Array(gridSize() ** 2).fill('#ffffff'))

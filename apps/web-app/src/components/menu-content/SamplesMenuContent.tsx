@@ -2,7 +2,7 @@ import { createEffect, For, Show, type Component } from 'solid-js'
 import { type SetStoreFunction } from 'solid-js/store'
 import { type PixelImage } from 'common'
 import { useQuery } from '@tanstack/solid-query'
-import PixelImagePreview from '../grid2d/PixelImagePreview'
+import PixelImagePreview from '../../grid2d/PixelImagePreview'
 
 interface SamplesMenuContentProps {
     currentImage: PixelImage

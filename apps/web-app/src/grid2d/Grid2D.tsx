@@ -6,6 +6,7 @@ interface Grid2DProps {
     cells: string[]
     gridSize: number
     onPaint: (index: number, color: string) => void
+    onColorPick: (color: string) => void
     onSizeChange: (size: number) => void
     onClear: () => void
 }
@@ -58,6 +59,10 @@ const Grid2D: Component<Grid2DProps> = (props) => {
                             onClick={() =>
                                 props.onPaint(i, props.selectedColor)
                             }
+                            onContextMenu={(e) => {
+                                e.preventDefault()
+                                props.onColorPick(color())
+                            }}
                             onMouseEnter={(e) => {
                                 if (e.buttons === 1)
                                     props.onPaint(i, props.selectedColor)
