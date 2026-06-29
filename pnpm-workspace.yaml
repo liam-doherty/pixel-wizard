@@ -31,3 +31,5 @@ catalog:
   '@hono/zod-validator': ^0.8.0
   '@fortawesome/fontawesome-free': ^7.2.0
   vitest: ^4.1.9
+  pino: ^10.3.1
+  '@hono/structured-logger': ^0.1.0

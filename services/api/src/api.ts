@@ -1,19 +1,63 @@
 import { Hono } from 'hono'
 import { cors } from 'hono/cors'
+import { structuredLogger } from '@hono/structured-logger'
+import { requestId } from 'hono/request-id'
 import { zValidator } from '@hono/zod-validator'
 import { Player, PixelImage } from 'common'
 import sharp from 'sharp'
 import * as z from 'zod'
 import { GoogleGenAI } from '@google/genai'
 import { SampleImages } from './SampleImages.js'
+import { createLogger, type BaseLogger } from './logger.js'
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024 // 5 MB
 
 export function makeApi() {
-    const app = new Hono()
+    const rootLogger = createLogger()
+
+    const app = new Hono<{ Variables: { logger: BaseLogger } }>()
     app.use(cors())
 
+    app.use(requestId())
+    app.use(
+        structuredLogger({
+            createLogger: (c) =>
+                rootLogger.child({ requestId: c.var.requestId }),
+            onRequest: (logger, c) => {
+                logger.info(
+                    {
+                        method: c.req.method,
+                        path: c.req.path,
+                        userAgent: c.req.header('User-Agent'),
+                    },
+                    'incoming request',
+                )
+            },
+            onResponse: (logger, c, elapsedMs) => {
+                logger.info(
+                    {
+                        status: c.res.status,
+                        elapsedMs,
+                        contentLength: c.res.headers.get('content-length'),
+                    },
+                    'request completed',
+                )
+            },
+            onError: (logger, err, c) => {
+                logger.error(
+                    {
+                        err,
+                        method: c.req.method,
+                        path: c.req.path,
+                    },
+                    'request failed',
+                )
+            },
+        }),
+    )
+
     app.get('/', (c) => {
+        c.var.logger.info({}, 'root endpoint hit')
         return c.text('Hello Hono!')
     })
 
@@ -84,10 +128,12 @@ export function makeApi() {
             const file = body['file']
 
             if (!(file instanceof File)) {
+                c.var.logger.error({}, 'No file uploaded')
                 return c.json({ error: 'No file uploaded' }, 400)
             }
 
             if (file.size > MAX_FILE_SIZE) {
+                c.var.logger.error({}, 'File exceeds 5 MB limit')
                 return c.json({ error: 'File exceeds 5 MB limit' }, 413)
             }
 
@@ -166,10 +212,12 @@ Return a JSON object with:
             const expected = size * size
             if (raw && Array.isArray(raw.cells)) {
                 if (raw.cells.length > expected) {
+                    c.var.logger.info({}, 'genAi screwed up, to large')
                     raw.cells = raw.cells.slice(0, expected)
-                } else while (raw.cells.length < expected) {
-                    raw.cells.push('#ffffff')
-                }
+                } else
+                    while (raw.cells.length < expected) {
+                        raw.cells.push('#ffffff')
+                    }
             }
             const parsed = PixelImage.safeParse(raw)
 
