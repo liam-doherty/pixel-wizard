@@ -4,7 +4,10 @@
     "description": "",
     "main": "index.js",
     "scripts": {
-        "build": "tsc -b",
+        "build:common": "pnpm --filter common build",
+        "build:app": "pnpm --filter web-app build",
+        "build:api": "pnpm --filter api build",
+        "build": "pnpm run \"/^build:.*/\"",
         "test": "vitest run",
         "lint": "eslint .",
         "format": "prettier --write .",
