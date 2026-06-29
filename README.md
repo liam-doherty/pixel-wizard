@@ -15,12 +15,12 @@ A browser-based pixel art editor. Draw on a 2D grid, import and auto-pixelate im
 
 ## Tech stack
 
-| Layer | Tools |
-|---|---|
+| Layer    | Tools                                                      |
+| -------- | ---------------------------------------------------------- |
 | Frontend | SolidJS, TanStack Query, Vite, Tailwind CSS v4, DaisyUI v5 |
-| Backend | Hono on Node.js, Sharp, `@google/genai` |
-| Shared | Zod schemas (`PixelImage`, `Player`) built with Vite |
-| Tooling | pnpm workspaces, TypeScript, ESLint, Prettier, Vitest |
+| Backend  | Hono on Node.js, Sharp, `@google/genai`                    |
+| Shared   | Zod schemas (`PixelImage`, `Player`) built with Vite       |
+| Tooling  | pnpm workspaces, TypeScript, ESLint, Prettier, Vitest      |
 
 ## Project structure
 
@@ -41,6 +41,10 @@ libs/common       # Shared Zod types
 
 ```bash
 pnpm install
+```
+
+```bash
+pnpm build
 ```
 
 **2. Configure the API**
@@ -71,9 +75,9 @@ pnpm dev:app
 
 ## API reference
 
-| Method | Path | Description |
-|---|---|---|
-| `GET` | `/images/samples` | Returns the built-in sample images |
-| `POST` | `/images/upload?size=N` | Upload an image, returns a pixelated `PixelImage` |
-| `POST` | `/images/png?scale=N` | Convert a `PixelImage` to a scaled PNG download |
-| `POST` | `/images/generate` | Generate a `PixelImage` from a text description via Gemini |
+| Method | Path                    | Description                                                |
+| ------ | ----------------------- | ---------------------------------------------------------- |
+| `GET`  | `/images/samples`       | Returns the built-in sample images                         |
+| `POST` | `/images/upload?size=N` | Upload an image, returns a pixelated `PixelImage`          |
+| `POST` | `/images/png?scale=N`   | Convert a `PixelImage` to a scaled PNG download            |
+| `POST` | `/images/generate`      | Generate a `PixelImage` from a text description via Gemini |
