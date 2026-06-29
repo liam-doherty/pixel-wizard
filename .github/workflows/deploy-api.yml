@@ -1,0 +1,41 @@
+name: Deploy API
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'services/api/**'
+      - 'libs/common/**'
+      - 'pnpm-lock.yaml'
+  workflow_dispatch:
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 11.9.0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build
+        run: pnpm build:common && pnpm build:api
+
+      - name: Create deployment bundle
+        run: pnpm deploy --filter api --prod .deploy
+
+      - name: Deploy to Azure App Service
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: ${{ secrets.AZURE_WEBAPP_NAME }}
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+          package: .deploy
