@@ -4,12 +4,14 @@
     "description": "",
     "main": "index.js",
     "scripts": {
+        "build": "tsc -b",
         "test": "vitest run",
         "lint": "eslint .",
         "format": "prettier --write .",
         "dev:common": "pnpm --filter common build --watch",
         "dev:app": "pnpm --filter web-app dev",
-        "dev:api": "pnpm --filter api dev"
+        "dev:api": "pnpm --filter api dev",
+        "dev": "pnpm run \"/^dev:.*/\""
     },
     "keywords": [],
     "author": "",

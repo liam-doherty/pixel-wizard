@@ -1,35 +1,39 @@
 packages:
-  - 'apps/*'
-  - 'libs/*'
-  - 'services/*'
+    - 'apps/*'
+    - 'libs/*'
+    - 'services/*'
 allowBuilds:
-  '@google/genai': set this to true or false
-  esbuild: set this to true or false
-  protobufjs: set this to true or false
+    '@google/genai': set this to true or false
+    esbuild: set this to true or false
+    protobufjs: set this to true or false
 catalog:
-  '@types/node': '^24.12.3'
-  '@hono/node-server': '^2.0.6'
-  'solid-js': '^1.9.12'
-  'tailwindcss': '^4.3.1'
-  '@tailwindcss/vite': '^4.3.1'
-  'daisyui': '^5.5.23'
-  'typescript': '~6.0.2'
-  'vite': '^8.0.12'
-  'hono': '^4.12.27'
-  'vite-plugin-solid': '^2.11.12'
-  'vite-plugin-dts': '^5.0.2'
-  'tsx': '^4.22.4'
-  'prettier': '^3.8.4'
-  'zod': '^4.4.3'
-  '@eslint/js': '^10.0.1'
-  'eslint': '^10.5.0'
-  'eslint-config-prettier': '^10.1.8'
-  'eslint-plugin-prettier': '^5.5.6'
-  'typescript-eslint': '^8.62.0'
-  'globals': '^17.7.0'
-  '@tanstack/solid-query': ^5.101.1
-  '@hono/zod-validator': ^0.8.0
-  '@fortawesome/fontawesome-free': ^7.2.0
-  vitest: ^4.1.9
-  pino: ^10.3.1
-  '@hono/structured-logger': ^0.1.0
+    '@types/node': '^24.12.3'
+    '@hono/node-server': '^2.0.6'
+    'solid-js': '^1.9.12'
+    'tailwindcss': '^4.3.1'
+    '@tailwindcss/vite': '^4.3.1'
+    'daisyui': '^5.5.23'
+    'typescript': '~6.0.2'
+    'vite': '^8.0.12'
+    'hono': '^4.12.27'
+    'vite-plugin-solid': '^2.11.12'
+    'vite-plugin-dts': '^5.0.2'
+    'tsx': '^4.22.4'
+    'prettier': '^3.8.4'
+    'zod': '^4.4.3'
+    'zod-to-json-schema': '^3.25.2'
+    '@eslint/js': '^10.0.1'
+    'eslint': '^10.5.0'
+    'eslint-config-prettier': '^10.1.8'
+    'eslint-plugin-prettier': '^5.5.6'
+    'typescript-eslint': '^8.62.0'
+    'globals': '^17.7.0'
+    '@tanstack/solid-query': ^5.101.1
+    '@hono/zod-validator': ^0.8.0
+    '@fortawesome/fontawesome-free': ^7.2.0
+    vitest: ^4.1.9
+    pino: ^10.3.1
+    '@hono/structured-logger': ^0.1.0
+    '@google/genai': '^2.10.0'
+    'sharp': '^0.35.2'
+    'jsdom': '^29.1.1'

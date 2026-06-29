@@ -8,16 +8,16 @@
         "start": "node dist/index.js"
     },
     "dependencies": {
-        "@google/genai": "^2.10.0",
+        "@google/genai": "catalog:",
         "@hono/node-server": "catalog:",
         "@hono/structured-logger": "catalog:",
         "@hono/zod-validator": "catalog:",
         "common": "workspace:*",
         "hono": "catalog:",
         "pino": "catalog:",
-        "sharp": "^0.35.2",
+        "sharp": "catalog:",
         "zod": "catalog:",
-        "zod-to-json-schema": "^3.25.2"
+        "zod-to-json-schema": "catalog:"
     },
     "devDependencies": {
         "@types/node": "catalog:",
