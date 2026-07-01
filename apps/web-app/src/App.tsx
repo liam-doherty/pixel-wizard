@@ -1,4 +1,4 @@
-import { createSignal, Show } from 'solid-js'
+import { createMemo, createSignal, Show } from 'solid-js'
 import { createStore } from 'solid-js/store'
 
 import './App.css'
@@ -7,6 +7,9 @@ import { type PixelImage } from 'common'
 import Layout from './Layout'
 import Grid2D from './grid2d/Grid2D'
 import SideMenu from './components/SideMenu'
+import Toolbar from './components/Toolbar'
+import { type Tool, ToolOption } from './helpers/ToolOption'
+import { floodFill } from './helpers/floodFill'
 import ColorMenuContent from './components/menu-content/ColorMenuContent'
 import ImportMenuContent from './components/menu-content/ImportMenuContent'
 import AiMenuContent from './components/menu-content/AiMenuContent'
@@ -33,6 +36,8 @@ function App() {
         Array(DEFAULT_SIZE ** 2).fill('#ffffff'),
     )
     const [samplesStore, setSamplesStore] = createStore<PixelImage[]>([])
+    const [selectedTool, setSelectedTool] = createSignal(ToolOption.Draw)
+    const [showGrid, setShowGrid] = createSignal(true)
 
     const paint = (index: number, color: string) => {
         setCells((prev) => {
@@ -41,6 +46,34 @@ function App() {
             return next
         })
     }
+
+    const fill = (index: number, color: string) => {
+        setCells((prev) => floodFill(prev, index, color, gridSize()))
+    }
+
+    const currentTool = createMemo((): Tool => {
+        const color = selectedColor()
+        switch (selectedTool()) {
+            case ToolOption.Draw:
+                return {
+                    onCellClick: (i) => paint(i, color),
+                    onCellDrag: (i) => paint(i, color),
+                    cursor: 'crosshair',
+                }
+            case ToolOption.Erase:
+                return {
+                    onCellClick: (i) => paint(i, '#ffffff'),
+                    onCellDrag: (i) => paint(i, '#ffffff'),
+                    cursor: 'cell',
+                }
+            case ToolOption.Fill:
+                return {
+                    onCellClick: (i) => fill(i, color),
+                    onCellDrag: () => {},
+                    cursor: 'crosshair',
+                }
+        }
+    })
 
     const changeSize = (size: number) => {
         setGridSize(size)
@@ -94,18 +127,26 @@ function App() {
                     />
                 </Show>
 
-                <div class="flex flex-1 items-center justify-center">
+                <div class="flex flex-col flex-1 items-center gap-4 min-h-0">
+                    <Toolbar
+                        selectedTool={selectedTool()}
+                        setSelectedTool={setSelectedTool}
+                        showGrid={showGrid()}
+                        onToggleGrid={() => setShowGrid((v) => !v)}
+                    />
+                    <div class="flex flex-1 items-center justify-center w-full min-h-0">
                     <Grid2D
-                        selectedColor={selectedColor()}
+                        tool={currentTool()}
+                        showGrid={showGrid()}
                         cells={cells()}
                         gridSize={gridSize()}
-                        onPaint={paint}
                         onColorPick={setSelectedColor}
                         onSizeChange={changeSize}
                         onClear={() =>
                             setCells(Array(gridSize() ** 2).fill('#ffffff'))
                         }
                     />
+                    </div>
                 </div>
             </div>
         </Layout>
