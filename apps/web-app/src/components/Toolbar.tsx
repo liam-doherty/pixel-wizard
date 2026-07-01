@@ -1,10 +1,14 @@
+import { For } from 'solid-js'
 import { ToolOption } from '../helpers/ToolOption'
+import { BRUSHES, type Brush } from '../helpers/Brush'
 
 interface ToolbarProps {
     selectedTool: ToolOption
     setSelectedTool: (tool: ToolOption) => void
     showGrid: boolean
     onToggleGrid: () => void
+    selectedBrush: Brush
+    setSelectedBrush: (brush: Brush) => void
 }
 
 const ToolbarButton = (props: {
@@ -46,18 +50,6 @@ const Toolbar = (props: ToolbarProps) => {
                     active={props.selectedTool === ToolOption.Fill}
                     onClick={() => props.setSelectedTool(ToolOption.Fill)}
                 />
-                {/* <Divider />
-                <ToolbarButton icon="fa-rotate-left" title="Undo" />
-                <ToolbarButton icon="fa-rotate-right" title="Redo" />
-                <Divider />
-                <ToolbarButton
-                    icon="fa-magnifying-glass-plus"
-                    title="Zoom In"
-                />
-                <ToolbarButton
-                    icon="fa-magnifying-glass-minus"
-                    title="Zoom Out"
-                /> */}
                 <Divider />
                 <ToolbarButton
                     icon="fa-table-cells"
@@ -65,7 +57,23 @@ const Toolbar = (props: ToolbarProps) => {
                     active={props.showGrid}
                     onClick={props.onToggleGrid}
                 />
-                {/* <ToolbarButton icon="fa-eye" title="Preview" /> */}
+                <Divider />
+                <select
+                    class="select select-sm select-ghost"
+                    value={props.selectedBrush.id}
+                    disabled={props.selectedTool === ToolOption.Fill}
+                    onChange={(e) =>
+                        props.setSelectedBrush(
+                            BRUSHES.find(
+                                (b) => b.id === e.currentTarget.value,
+                            )!,
+                        )
+                    }
+                >
+                    <For each={BRUSHES}>
+                        {(b) => <option value={b.id}>{b.label}</option>}
+                    </For>
+                </select>
             </div>
         </div>
     )

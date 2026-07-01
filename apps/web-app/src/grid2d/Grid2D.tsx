@@ -1,10 +1,12 @@
-import { type Component, createMemo, Index } from 'solid-js'
+import { type Component, createMemo, createSignal, Index } from 'solid-js'
 import { CANVAS_SIZE } from '../helpers/Consts'
 import { type Tool } from '../helpers/ToolOption'
+import { type Brush, getBrushIndices } from '../helpers/Brush'
 
 interface Grid2DProps {
     tool: Tool
     showGrid: boolean
+    brush: Brush
     cells: string[]
     gridSize: number
     onColorPick: (color: string) => void
@@ -14,6 +16,13 @@ interface Grid2DProps {
 
 const Grid2D: Component<Grid2DProps> = (props) => {
     const cellSize = createMemo(() => Math.floor(CANVAS_SIZE / props.gridSize))
+    const [hoveredIndex, setHoveredIndex] = createSignal<number | null>(null)
+
+    const highlightedSet = createMemo(() => {
+        const h = hoveredIndex()
+        if (h === null) return new Set<number>()
+        return new Set(getBrushIndices(h, props.brush, props.gridSize))
+    })
 
     return (
         <div class="flex flex-col items-center gap-4">
@@ -46,24 +55,42 @@ const Grid2D: Component<Grid2DProps> = (props) => {
                     padding: '8px',
                     'border-radius': '8px',
                 }}
+                onMouseLeave={() => setHoveredIndex(null)}
             >
                 <Index each={props.cells}>
                     {(color, i) => (
                         <div
-                            class="transition duration-300 ease-in-out hover:translate-y-0 hover:scale-110"
                             style={{
                                 'background-color': color(),
                                 width: `${cellSize()}px`,
                                 height: `${cellSize()}px`,
                                 'border-radius': props.showGrid ? '3px' : '0',
+                                'box-shadow': highlightedSet().has(i)
+                                    ? 'inset 0 0 0 2px white, inset 0 0 0 3px black'
+                                    : undefined,
                             }}
-                            onClick={() => props.tool.onCellClick(i)}
+                            onClick={() => {
+                                const indices = props.tool.supportsBrush
+                                    ? getBrushIndices(i, props.brush, props.gridSize)
+                                    : [i]
+                                indices.forEach((idx) =>
+                                    props.tool.onCellClick(idx),
+                                )
+                            }}
                             onContextMenu={(e) => {
                                 e.preventDefault()
                                 props.onColorPick(color())
                             }}
                             onMouseEnter={(e) => {
-                                if (e.buttons === 1) props.tool.onCellDrag(i)
+                                setHoveredIndex(i)
+                                if (e.buttons === 1) {
+                                    const indices = props.tool.supportsBrush
+                                        ? getBrushIndices(i, props.brush, props.gridSize)
+                                        : [i]
+                                    indices.forEach((idx) =>
+                                        props.tool.onCellDrag(idx),
+                                    )
+                                }
                             }}
                         />
                     )}

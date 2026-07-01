@@ -10,6 +10,7 @@ import SideMenu from './components/SideMenu'
 import Toolbar from './components/Toolbar'
 import { type Tool, ToolOption } from './helpers/ToolOption'
 import { floodFill } from './helpers/floodFill'
+import { BRUSHES, type Brush } from './helpers/Brush'
 import ColorMenuContent from './components/menu-content/ColorMenuContent'
 import ImportMenuContent from './components/menu-content/ImportMenuContent'
 import AiMenuContent from './components/menu-content/AiMenuContent'
@@ -38,6 +39,7 @@ function App() {
     const [samplesStore, setSamplesStore] = createStore<PixelImage[]>([])
     const [selectedTool, setSelectedTool] = createSignal(ToolOption.Draw)
     const [showGrid, setShowGrid] = createSignal(true)
+    const [selectedBrush, setSelectedBrush] = createSignal<Brush>(BRUSHES[0])
 
     const paint = (index: number, color: string) => {
         setCells((prev) => {
@@ -59,19 +61,22 @@ function App() {
                     onCellClick: (i) => paint(i, color),
                     onCellDrag: (i) => paint(i, color),
                     cursor: 'crosshair',
-                }
+                    supportsBrush: true,
+                } as Tool
             case ToolOption.Erase:
                 return {
                     onCellClick: (i) => paint(i, '#ffffff'),
                     onCellDrag: (i) => paint(i, '#ffffff'),
                     cursor: 'cell',
-                }
+                    supportsBrush: true,
+                } as Tool
             case ToolOption.Fill:
                 return {
                     onCellClick: (i) => fill(i, color),
                     onCellDrag: () => {},
                     cursor: 'crosshair',
-                }
+                    supportsBrush: false,
+                } as Tool
         }
     })
 
@@ -133,19 +138,22 @@ function App() {
                         setSelectedTool={setSelectedTool}
                         showGrid={showGrid()}
                         onToggleGrid={() => setShowGrid((v) => !v)}
+                        selectedBrush={selectedBrush()}
+                        setSelectedBrush={setSelectedBrush}
                     />
                     <div class="flex flex-1 items-center justify-center w-full min-h-0">
-                    <Grid2D
-                        tool={currentTool()}
-                        showGrid={showGrid()}
-                        cells={cells()}
-                        gridSize={gridSize()}
-                        onColorPick={setSelectedColor}
-                        onSizeChange={changeSize}
-                        onClear={() =>
-                            setCells(Array(gridSize() ** 2).fill('#ffffff'))
-                        }
-                    />
+                        <Grid2D
+                            tool={currentTool()}
+                            showGrid={showGrid()}
+                            brush={selectedBrush()}
+                            cells={cells()}
+                            gridSize={gridSize()}
+                            onColorPick={setSelectedColor}
+                            onSizeChange={changeSize}
+                            onClear={() =>
+                                setCells(Array(gridSize() ** 2).fill('#ffffff'))
+                            }
+                        />
                     </div>
                 </div>
             </div>
